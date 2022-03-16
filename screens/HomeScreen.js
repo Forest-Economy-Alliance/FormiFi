@@ -37,7 +37,7 @@ export function HomeScreen({navigation}) {
           }}>
           <Button
             title="User Login"
-            color="#8D917B"
+            color="#8192A6"
             onPress={() => navigation.navigate('UserLogin')}
           />
         </View>
@@ -49,7 +49,7 @@ export function HomeScreen({navigation}) {
           }}>
           <Button
             title="Admin Login"
-            color="#8D917B"
+            color="#A68192"
             onPress={() => navigation.navigate('AdminLogin')}
           />
         </View>
