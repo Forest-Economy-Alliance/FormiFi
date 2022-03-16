@@ -7,12 +7,13 @@ import {
   Switch,
   Button,
   ScrollView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import DatePicker from 'react-native-date-picker';
-
 import FileSystem from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
+import * as Progress from 'react-native-progress';
 
 export function FormScreen({navigation, route}) {
   const {responseJSON} = route.params;
@@ -126,16 +127,60 @@ export function FormScreen({navigation, route}) {
     );
   }
 
+  const [progress, setProgress] = useState(0.0);
+
+  function renderProgressBars(N) {
+    let progress_bars = [];
+
+    for (let i = 0; i < N; i++) {
+      progress_bars.push(
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setProgress((progress + 0.1) % 1.0);
+          }}
+          onLongPress={() => {
+            // jump to that form
+          }}>
+          <View style={styles.progressBarInner}>
+            <Progress.Bar
+              progress={Math.random()}
+              width={50}
+              height={50}
+              borderRadius={4}
+              animationConfig={{
+                duration: 500,
+              }}
+              color="#A68192"
+            />
+          </View>
+        </TouchableWithoutFeedback>,
+      );
+    }
+    return progress_bars;
+  }
+
+  function renderForm() {
+    form_types = ['boolean', 'numeric', 'text', 'date', 'attachment'];
+    form_render = [];
+
+    for (let i = 0; i < 10; i++) {}
+
+    return form_render;
+  }
+
   return (
     <ScrollView>
       <View>
-        <Text>Form Screen</Text>
+        <View style={styles.progressBar}>{renderProgressBars(5)}</View>
+        <View style={styles.progressBar}>{renderProgressBars(5)}</View>
+      </View>
+      <ScrollView>
         {booleanInputCard('ELECTED THROUGH VOTING')}
         {numericInputCard('VOTES')}
         {textInputCard('NAME OF CANDIDATE')}
         {dateInputCard('DATE OF ELECTION')}
         {attachmentInputCard('ATTACHMENTS')}
-      </View>
+      </ScrollView>
     </ScrollView>
   );
 }
@@ -147,6 +192,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 50,
+  },
+  progressBar: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    flex: 1,
+    flexDirection: 'row',
+  },
+  progressBarInner: {
+    paddingHorizontal: 10,
   },
   queryCard: {
     backgroundColor: '#EEEEDA',

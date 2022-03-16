@@ -1,14 +1,13 @@
-import React, {useState} from 'react';
-import {Text, View, StyleSheet, TextInput, Button} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, TextInput, Button} from 'react-native';
 
 import {useForm, Controller} from 'react-hook-form';
-import {sha256} from 'js-sha256';
 
 export function UserLoginScreen({navigation}) {
   const {handleSubmit, control, reset} = useForm({
     defaultValues: {
       Name: 'Test' + Math.floor(Math.random() * 100),
-      Age: Math.floor(Math.random() * 100),
+      Age: Math.floor(Math.random() * 100).toString(),
       Sex: 'Male',
     },
   });

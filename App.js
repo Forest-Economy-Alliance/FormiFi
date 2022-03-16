@@ -7,6 +7,7 @@ import {HomeScreen} from './screens/HomeScreen';
 import {UserLoginScreen} from './screens/UserLoginScreen';
 import {FormScreen} from './screens/FormScreen';
 import {FormSelectorScreen} from './screens/FormSelectorScreen';
+import {CreateFormScreen} from './screens/CreateFormScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,15 @@ export default function App() {
           component={FormSelectorScreen}
           options={{
             title: 'Form Selector',
+            headerStyle: {backgroundColor: '#DFD09C'},
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen
+          name="CreateForm"
+          component={CreateFormScreen}
+          options={{
+            title: 'Create A Form',
             headerStyle: {backgroundColor: '#DFD09C'},
             headerTitleAlign: 'center',
           }}

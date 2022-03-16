@@ -1,0 +1,55 @@
+{
+  "formName": "ABC Claims",
+  "formID": "111",
+  "nCategories": 2,
+  "categories": [
+    {
+      "categoryID": "A1",
+      "categoryTitle": "A1: FRC Constituent",
+      "queries": [
+        {
+          "queryID": "88a",
+          "query": "Are you a human?",
+          "inputType": "boolean",
+          "required": false
+        },
+        {
+          "queryID": "89a",
+          "query": "What is your age?",
+          "inputType": "numeric",
+          "required": false
+        },
+        {
+          "queryID": "90a",
+          "query": "What is your guardian's name?",
+          "inputType": "text",
+          "required": false
+        }
+      ]
+    },
+    {
+      "categoryID": "A2",
+      "categoryTitle": "A2: HAHA Constituent",
+      "queries": [
+        {
+          "queryID": "91a",
+          "query": "Are you a human?",
+          "inputType": "boolean",
+          "required": false
+        },
+        {
+          "queryID": "92a",
+          "query": "What is your age?",
+          "inputType": "numeric",
+          "required": false
+        },
+        {
+          "queryID": "93a",
+          "query": "What is your guardian's name?",
+          "inputType": "text",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ export function FormSelectorScreen({navigation, route}) {
     form_name: '',
     form: {},
     response: {},
-    responseID: '',
+    submissionID: '',
   };
 
   const [form, setForm] = useState(null);
@@ -45,7 +45,7 @@ export function FormSelectorScreen({navigation, route}) {
     {label: 'Custom Forms', value: 'Custom Forms', disabled: true},
   ]);
 
-  function Generate_ResponseID(data, Form) {
+  function Generate_SubmissionID(data, Form) {
     var {Name, Age, Sex} = data;
     Name = Name.replace(/ /g, '_');
     Form = Form.replace(/ /g, '_');
@@ -61,7 +61,7 @@ export function FormSelectorScreen({navigation, route}) {
     return ReponseID;
   }
 
-  // function GetCode(string) {
+  // function GetInitials(string) {
   //   var initials = '';
   //   var words = string.toLowerCase().split(/[^a-zA-Z\d:]/);
   //   for (var i = 0; i < words.length; i++) {
@@ -97,7 +97,7 @@ export function FormSelectorScreen({navigation, route}) {
 
   function handleSubmit(form) {
     responseJSON.form_name = form;
-    responseJSON.responseID = Generate_ResponseID(data, form);
+    responseJSON.submissionID = Generate_SubmissionID(data, form);
     console.log(
       'Going to the Form with',
       JSON.stringify(responseJSON, null, 4),
@@ -111,13 +111,13 @@ export function FormSelectorScreen({navigation, route}) {
       .then(content => {
         responseJSON.form = JSON.parse(content, null, 2);
         responseJSON.form_name = form;
-        responseJSON.responseID = Generate_ResponseID(data, form);
+        responseJSON.submissionID = Generate_submissionID(data, form);
         // console.log('Going to the Form with', JSON.stringify(responseJSON, null, 4));
         navigation.navigate('Form', {responseJSON});
       })
       .catch(err => {
         responseJSON.form_name = form;
-        responseJSON.responseID = Generate_ResponseID(data, form);
+        responseJSON.submissionID = Generate_submissionID(data, form);
         console.log(
           'Going to the Form with',
           JSON.stringify(responseJSON, null, 4),
@@ -178,6 +178,14 @@ export function FormSelectorScreen({navigation, route}) {
         style={{
           flexDirection: 'row',
         }}>
+        <View style={{padding: 5, width: '25%'}}>
+          <Button
+            color="#8192A6"
+            title="Create a Form"
+            onPress={() => {
+              navigation.navigate('CreateForm');
+            }}></Button>
+        </View>
         <View style={{padding: 5, width: '25%'}}>
           <Button
             color="#A68192"
