@@ -27,7 +27,7 @@ export function HomeScreen({navigation}) {
             marginTop: '30%',
             marginBottom: '95%',
           }}>
-          Formifi
+          FormiFi
         </Text>
         <View
           style={{

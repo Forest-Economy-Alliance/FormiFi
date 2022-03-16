@@ -66,9 +66,7 @@ import {
 export function CreateFormScreen({navigation, route}) {
   const [formJSON, setFormJSON] = useState('');
 
-  var formName, formDescription, nSections, sections;
-
-  function QuestionCard() {
+  function QuestionCard(nQuestions) {
     var questionJSON = '';
 
     const [question, setQuestion] = useState('');
@@ -79,7 +77,7 @@ export function CreateFormScreen({navigation, route}) {
 
     const toggleSwitch = () => setQuestionRequired(!questionRequired);
 
-    return (
+    singleQuestionCard = (
       <View style={styles.queryCard}>
         <Text style={styles.queryCardText}>Question</Text>
         <TextInput
@@ -111,9 +109,16 @@ export function CreateFormScreen({navigation, route}) {
         />
       </View>
     );
+
+    var nQuestionCards = [];
+    for (var i = 0; i < nQuestions; i++) {
+      nQuestionCards.push(singleQuestionCard);
+    }
+
+    return nQuestionCards;
   }
 
-  function SectionCard() {
+  function SectionCard(nSections) {
     var sectionJSON = '';
 
     const [sectionName, setSectionName] = useState('');
@@ -121,70 +126,129 @@ export function CreateFormScreen({navigation, route}) {
     const [nQuestions, setNQuestions] = useState('');
     const [questions, setQuestions] = useState([]);
 
-    return (
-      <View style={styles.queryCard}>
-        <Text style={styles.queryCardText}>Section Name</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Section Name"
-          placeholderTextColor="#747474"
-          onChangeText={text => setSectionName(text)}
-        />
-        <Text style={styles.queryCardText}>Section Description</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Section Description"
-          placeholderTextColor="#747474"
-          onChangeText={text => setSectionDescription(text)}
-        />
-        <Text style={styles.queryCardText}>Number of Questions</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Number of Questions"
-          placeholderTextColor="#747474"
-          keyboardType="numeric"
-          onChangeText={text => setNQuestions(text)}
-        />
-        <Text style={styles.queryCardText}>Questions</Text>
+    singleSectionCard = (
+      <View>
+        <View style={styles.queryCard}>
+          <Text style={styles.queryCardText}>Section Name</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Section Name"
+            placeholderTextColor="#747474"
+            onChangeText={text => setSectionName(text)}
+          />
+          <Text style={styles.queryCardText}>Section Description</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Section Description"
+            placeholderTextColor="#747474"
+            onChangeText={text => setSectionDescription(text)}
+          />
+          <Text style={styles.queryCardText}>Number of Questions</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Number of Questions"
+            placeholderTextColor="#747474"
+            keyboardType="numeric"
+            onChangeText={text => setNQuestions(text)}
+          />
+          <Text style={styles.queryCardText}>Questions</Text>
+        </View>
+        <View>{QuestionCard(nQuestions)}</View>
       </View>
     );
+
+    var nSectionCards = [];
+    for (var i = 0; i < nSections; i++) {
+      nSectionCards.push(singleSectionCard);
+    }
+
+    return nSectionCards;
   }
 
-  function IntroCard() {
+  function DynamicForm() {
+    const [formName, setFormName] = useState('');
+    const [formDescription, setFormDescription] = useState('');
+    const [nSections, setNSections] = useState('');
+    const [sections, setSections] = useState([]);
+
+    function createFormID(formName) {
+      var formID = formName.replace(/\s/g, '_');
+      formID = formID.replace(/\W/g, '');
+      formID = formID.toLowerCase();
+
+      formID = formID + '_' + Math.floor(Math.random() * 9);
+      formID = formID + '_' + Math.floor(Math.random() * 9);
+      formID = formID + '_' + Math.floor(Math.random() * 9);
+      formID = formID + '_' + Math.floor(Math.random() * 9);
+
+      return formID;
+    }
+
+    function createFormJSON(formName, formDescription, nSections, sections) {
+      var formJSON = {
+        formID: createFormID(formName),
+        formName: formName,
+        formDescription: formDescription,
+        nSections: nSections,
+        sections: sections,
+      };
+      alert(JSON.stringify(formJSON, null, 2));
+    }
+
     return (
-      <View style={styles.queryCard}>
-        <Text style={styles.queryCardText}>Form Name</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Form Name"
-          placeholderTextColor="#747474"
-          onChangeText={text => setFormName(text)}
-        />
-        <Text style={styles.queryCardText}>Form Description</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Form Description"
-          placeholderTextColor="#747474"
-          onChangeText={text => setFormDescription(text)}
-        />
-        <Text style={styles.queryCardText}>Number of Sections</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Number of Sections"
-          placeholderTextColor="#747474"
-          keyboardType="numeric"
-          onChangeText={text => setNSections(text)}
-        />
-        <Text style={styles.queryCardText}>Sections</Text>
+      <View>
+        <View style={styles.queryCard}>
+          <Text style={styles.queryCardText}>Form Name</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Form Name"
+            placeholderTextColor="#747474"
+            onChangeText={text => setFormName(text)}
+          />
+          <Text style={styles.queryCardText}>Form Description</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Form Description"
+            placeholderTextColor="#747474"
+            onChangeText={text => setFormDescription(text)}
+          />
+          <Text style={styles.queryCardText}>Number of Sections</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Number of Sections"
+            placeholderTextColor="#747474"
+            keyboardType="numeric"
+            onChangeText={text => setNSections(text)}
+          />
+        </View>
+        <View>{SectionCard(nSections)}</View>
+        <View
+          style={{
+            padding: 5,
+            width: '100%',
+          }}>
+          <Button
+            color="#A68192"
+            title="Create Form"
+            // onPress={createFormJSON(
+            //   formName,
+            //   formDescription,
+            //   nSections,
+            //   sections,
+            // )}
+            onPress={() => {
+              alert('JSON SAVED!');
+            }}
+          />
+        </View>
       </View>
     );
   }
 
   return (
     <ScrollView>
-      <View>{IntroCard()}</View>
-      <View>{SectionCard()}</View>
-      <View>{QuestionCard()}</View>
+      <Text style={styles.title}>Introduction</Text>
+      <View>{DynamicForm()}</View>
     </ScrollView>
   );
 }
@@ -196,6 +260,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 50,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    textAlign: 'center',
+    color: '#000000',
   },
   progressBar: {
     paddingHorizontal: 20,
