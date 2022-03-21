@@ -13,10 +13,9 @@ export function FormSelectorScreen({navigation, route}) {
     name: data.Name,
     age: data.Age,
     sex: data.Sex,
-    form_name: '',
-    form: {},
-    response: {},
     submissionID: '',
+    formName: '',
+    form: {},
   };
 
   const [form, setForm] = useState(null);
@@ -96,7 +95,7 @@ export function FormSelectorScreen({navigation, route}) {
   }
 
   function handleSubmit(form) {
-    responseJSON.form_name = form;
+    responseJSON.formName = form;
     responseJSON.submissionID = Generate_SubmissionID(data, form);
     console.log(
       'Going to the Form with',
@@ -110,13 +109,13 @@ export function FormSelectorScreen({navigation, route}) {
     )
       .then(content => {
         responseJSON.form = JSON.parse(content, null, 2);
-        responseJSON.form_name = form;
+        responseJSON.formName = form;
         responseJSON.submissionID = Generate_SubmissionID(data, form);
         // console.log('Going to the Form with', JSON.stringify(responseJSON, null, 4));
         navigation.navigate('Form', {responseJSON});
       })
       .catch(err => {
-        responseJSON.form_name = form;
+        responseJSON.formName = form;
         responseJSON.submissionID = Generate_SubmissionID(data, form);
         console.log(
           'Going to the Form with',

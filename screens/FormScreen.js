@@ -15,227 +15,126 @@ import FileSystem from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 import * as Progress from 'react-native-progress';
 
-/*
-
-{
-  "formID": 123456789,
-  "formName": "Important ISB Form",
-  "formDescription": "This is an important form",
-  "nSections": 2,
-  "sections": [
-    {
-      "sectionName": "A super cool section",
-      "nQuestions": 3,
-      "questions": [
-        {
-          "question": "What is your name?",
-          "questionType": "text",
-          "questionRequired": true,
-          "questionPlaceholder": "Enter your name",
-          "userResponse": ""
-        },
-        {
-          "question": "What is your age?",
-          "questionType": "number",
-          "questionRequired": true,
-          "questionPlaceholder": "Enter your age",
-          "userResponse": ""
-        },
-        {
-          "question": "What is your favorite color?",
-          "questionType": "text",
-          "questionRequired": true,
-          "questionPlaceholder": "Enter your favorite color",
-          "userResponse": ""
-        }
-      ]
-    },
-    {
-      "sectionName": "Another super cool section",
-      "nQuestions": 1,
-      "questions": [
-        {
-          "question": "What is your name?",
-          "questionType": "text",
-          "questionRequired": true,
-          "questionPlaceholder": "Enter your name",
-          "userResponse": ""
-        }
-      ]
-    }
-  ]
-}
-
-
-*/
-
 export function FormScreen({navigation, route}) {
-  const {responseJSON} = route.params;
-  const [progress, setProgress] = useState(0.0);
-
-  function booleanInputCard(form_element) {
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(!isEnabled);
-
-    return (
-      <View style={styles.queryCard}>
-        <Text style={styles.queryCardText}>{form_element}</Text>
-        <Switch
-          trackColor={{false: '#9F9F9F', true: '#91B8E9'}}
-          thumbColor={isEnabled ? '#1976D2' : '#FFFFFF'}
-          onValueChange={toggleSwitch}
-          value={isEnabled}
-        />
-      </View>
-    );
-  }
-
-  function numericInputCard(form_element) {
-    const [value, setValue] = useState('');
-    return (
-      <View style={styles.queryCard}>
-        <Text style={styles.queryCardText}>{form_element}</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter a number"
-          keyboardType="numeric"
-          placeholderTextColor="#747474"
-          onChangeText={text => setValue(text)}
-        />
-      </View>
-    );
-  }
-
-  function textInputCard(form_element) {
-    const [value, setValue] = useState('');
-    return (
-      <View style={styles.queryCard}>
-        <Text style={styles.queryCardText}>{form_element}</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter a string"
-          placeholderTextColor="#747474"
-          onChangeText={text => setValue(text)}
-        />
-      </View>
-    );
-  }
-
-  function dateInputCard(form_element) {
-    const [date, setDate] = useState(new Date());
-    const [open, setOpen] = useState(false);
-
-    return (
-      <View style={styles.queryCard}>
-        <Text style={styles.queryCardText}>{form_element}</Text>
-        <Button
-          style={styles.queryCardButton}
-          color="#A68192"
-          title="Pick a date"
-          onPress={() => setOpen(true)}
-        />
-        <DatePicker
-          modal
-          open={open}
-          date={date}
-          mode="date"
-          textColor="#fff"
-          onConfirm={date => {
-            setOpen(false);
-            setDate(date);
-          }}
-          onCancel={() => {
-            setOpen(false);
-          }}
-        />
-      </View>
-    );
-  }
-
-  function attachmentInputCard(form_element) {
-    const [attachment, setAttachment] = useState(null);
-
-    return (
-      <View style={styles.queryCard}>
-        <Text style={styles.queryCardText}>{form_element}</Text>
-        <Button
-          style={styles.queryCardButton}
-          color="#A68192"
-          title="Attach"
-          onPress={() => {
-            DocumentPicker.pick({
-              type: [DocumentPicker.types.allFiles],
-              copyTo: 'documentDirectory',
-            }).then(file => {
-              setAttachment(file);
-              let file_name = form[0].name;
-              let file_path = form[0].uri;
-
-              let dest_path =
-                FileSystem.ExternalDirectoryPath + '/files' + '/' + file_name;
-
-              FileSystem.copyFile(file_path, dest_path).then(() => {});
-            });
-          }}
-        />
-      </View>
-    );
-  }
-
-  function renderProgressBars(N) {
-    let progress_bars = [];
-
-    for (let i = 0; i < N; i++) {
-      progress_bars.push(
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setProgress((progress + 0.1) % 1.0);
-          }}
-          onLongPress={() => {
-            // jump to that form
-          }}>
-          <View style={styles.progressBarInner}>
-            <Progress.Bar
-              progress={Math.random()}
-              width={50}
-              height={50}
-              borderRadius={4}
-              animationConfig={{
-                duration: 500,
-              }}
-              color="#A68192"
-            />
-          </View>
-        </TouchableWithoutFeedback>,
-      );
-    }
-    return progress_bars;
-  }
-
-  function renderForm() {
-    form_types = ['boolean', 'numeric', 'text', 'date', 'attachment'];
-    form_render = [];
-
-    for (let i = 0; i < 10; i++) {}
-
-    return form_render;
-  }
+  const [formJSON, setFormJSON] = useState(route.params.responseJSON);
+  // alert(JSON.stringify(formJSON, null, 2));
 
   return (
-    <ScrollView>
-      {/* <View>
-        <View style={styles.progressBar}>{renderProgressBars(5)}</View>
-        <View style={styles.progressBar}>{renderProgressBars(5)}</View>
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.title}>{formJSON.formName}</Text>
+      <Text style={styles.description}>{formJSON.form.formDescription}</Text>
+
       <ScrollView>
-        {booleanInputCard('ELECTED THROUGH VOTING')}
-        {numericInputCard('VOTES')}
-        {textInputCard('NAME OF CANDIDATE')}
-        {dateInputCard('DATE OF ELECTION')}
-        {attachmentInputCard('ATTACHMENTS')}
-      </ScrollView> */}
-      <Text style={styles.title}>{responseJSON.formName}</Text>
-    </ScrollView>
+        {formJSON.form.sections
+          ? formJSON.form.sections.map((section, sectionIndex) => {
+              return (
+                <View key={sectionIndex} style={styles.section}>
+                  <Text style={styles.sectionTitle}>{section.sectionName}</Text>
+                  {section.questions.map((question, questionIndex) => {
+                    return (
+                      <View key={questionIndex} style={styles.question}>
+                        <Text style={styles.questionText}>
+                          {question.question}
+                        </Text>
+                        {question.questionType === 'text' ? (
+                          <View style={styles.queryCard}>
+                            <TextInput
+                              style={styles.textInput}
+                              placeholder={question.questionPlaceholder}
+                              onChangeText={text => {
+                                formJSON.form.sections[sectionIndex].questions[
+                                  questionIndex
+                                ].userResponse = text;
+                                setFormJSON(formJSON);
+                              }}
+                            />
+                          </View>
+                        ) : question.questionType === 'number' ? (
+                          <TextInput
+                            style={styles.textInput}
+                            placeholder={question.questionPlaceholder}
+                            onChangeText={text => {
+                              formJSON.form.sections[sectionIndex].questions[
+                                questionIndex
+                              ].userResponse = text;
+                              setFormJSON(formJSON);
+                            }}
+                          />
+                        ) : question.questionType === 'date' ? (
+                          <DatePicker
+                            style={styles.datePicker}
+                            date={
+                              formJSON.form.sections[sectionIndex].questions[
+                                questionIndex
+                              ].userResponse
+                            }
+                            mode="date"
+                            placeholder="select date"
+                            format="YYYY-MM-DD"
+                            minDate="1900-01-01"
+                            maxDate="2099-12-31"
+                            confirmBtnText="Confirm"
+                          />
+                        ) : question.questionType === 'file' ? (
+                          <View style={styles.queryCard}>
+                            <Text style={styles.queryCardText}>{question}</Text>
+                            <Button
+                              style={styles.queryCardButton}
+                              color="#A68192"
+                              title="Attach"
+                              onPress={() => {
+                                DocumentPicker.pick({
+                                  type: [DocumentPicker.types.allFiles],
+                                  copyTo: 'documentDirectory',
+                                }).then(file => {
+                                  setAttachment(file);
+                                  let file_name = form[0].name;
+                                  let file_path = form[0].uri;
+
+                                  let dest_path =
+                                    FileSystem.ExternalDirectoryPath +
+                                    '/files' +
+                                    '/' +
+                                    file_name;
+
+                                  FileSystem.copyFile(
+                                    file_path,
+                                    dest_path,
+                                  ).then(() => {});
+                                });
+                              }}
+                            />
+                          </View>
+                        ) : question.questionType === 'switch' ? (
+                          <Switch
+                            style={styles.switch}
+                            value={question.userResponse}
+                            onValueChange={value => {
+                              formJSON.form.sections[sectionIndex].questions[
+                                questionIndex
+                              ].userResponse = value;
+                              setFormJSON(formJSON);
+                            }}
+                          />
+                        ) : null}
+                      </View>
+                    );
+                  })}
+                </View>
+              );
+            })
+          : null}
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Submit"
+          color="#A68192"
+          onPress={() => {
+            alert(JSON.stringify(formJSON, null, 2));
+          }}
+        />
+      </View>
+    </View>
   );
 }
 
@@ -246,6 +145,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 50,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    textAlign: 'center',
+    color: '#000000',
+  },
+  description: {
+    fontSize: 15,
+    textAlign: 'center',
+    color: '#000000',
   },
   progressBar: {
     paddingHorizontal: 5,
