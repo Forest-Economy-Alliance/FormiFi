@@ -8,6 +8,7 @@ import {UserLoginScreen} from './screens/UserLoginScreen';
 import {FormScreen} from './screens/FormScreen';
 import {FormSelectorScreen} from './screens/FormSelectorScreen';
 import {CreateFormScreen} from './screens/CreateFormScreen';
+import {DashboardScreen} from './screens/DashboardScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,15 @@ export default function App() {
           component={UserLoginScreen}
           options={{
             title: 'User Login',
+            headerStyle: {backgroundColor: '#DFD09C'},
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen
+          name="Dashboard"
+          component={DashboardScreen}
+          options={{
+            title: 'Dashboard',
             headerStyle: {backgroundColor: '#DFD09C'},
             headerTitleAlign: 'center',
           }}

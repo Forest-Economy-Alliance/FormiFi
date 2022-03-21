@@ -48,9 +48,9 @@ export function HomeScreen({navigation}) {
             width: '100%',
           }}>
           <Button
-            title="Admin Login"
+            title="Dashboard"
             color="#A68192"
-            onPress={() => navigation.navigate('AdminLogin')}
+            onPress={() => navigation.navigate('Dashboard')}
           />
         </View>
       </ImageBackground>

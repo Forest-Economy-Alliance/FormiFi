@@ -111,13 +111,13 @@ export function FormSelectorScreen({navigation, route}) {
       .then(content => {
         responseJSON.form = JSON.parse(content, null, 2);
         responseJSON.form_name = form;
-        responseJSON.submissionID = Generate_submissionID(data, form);
+        responseJSON.submissionID = Generate_SubmissionID(data, form);
         // console.log('Going to the Form with', JSON.stringify(responseJSON, null, 4));
         navigation.navigate('Form', {responseJSON});
       })
       .catch(err => {
         responseJSON.form_name = form;
-        responseJSON.submissionID = Generate_submissionID(data, form);
+        responseJSON.submissionID = Generate_SubmissionID(data, form);
         console.log(
           'Going to the Form with',
           JSON.stringify(responseJSON, null, 4),

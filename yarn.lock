@@ -6007,7 +6007,7 @@
   "resolved" "https://registry.npmjs.org/react-native-dialog-input/-/react-native-dialog-input-1.0.8.tgz"
   "version" "1.0.8"
 
-"react-native-dialog@^9.2.0":
+"react-native-dialog@^9.2.1":
   "integrity" "sha512-UNnGFTpH0cX16cJZLFq9/TAZH1+B2vzJrQL1mUaSqZjV+sFTpUB1WvghJZxPwi52v587kJpfKN7oPfWaXAu+YQ=="
   "resolved" "https://registry.npmjs.org/react-native-dialog/-/react-native-dialog-9.2.1.tgz"
   "version" "9.2.1"

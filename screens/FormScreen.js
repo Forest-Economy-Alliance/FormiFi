@@ -15,8 +15,63 @@ import FileSystem from 'react-native-fs';
 import DocumentPicker from 'react-native-document-picker';
 import * as Progress from 'react-native-progress';
 
+/*
+
+{
+  "formID": 123456789,
+  "formName": "Important ISB Form",
+  "formDescription": "This is an important form",
+  "nSections": 2,
+  "sections": [
+    {
+      "sectionName": "A super cool section",
+      "nQuestions": 3,
+      "questions": [
+        {
+          "question": "What is your name?",
+          "questionType": "text",
+          "questionRequired": true,
+          "questionPlaceholder": "Enter your name",
+          "userResponse": ""
+        },
+        {
+          "question": "What is your age?",
+          "questionType": "number",
+          "questionRequired": true,
+          "questionPlaceholder": "Enter your age",
+          "userResponse": ""
+        },
+        {
+          "question": "What is your favorite color?",
+          "questionType": "text",
+          "questionRequired": true,
+          "questionPlaceholder": "Enter your favorite color",
+          "userResponse": ""
+        }
+      ]
+    },
+    {
+      "sectionName": "Another super cool section",
+      "nQuestions": 1,
+      "questions": [
+        {
+          "question": "What is your name?",
+          "questionType": "text",
+          "questionRequired": true,
+          "questionPlaceholder": "Enter your name",
+          "userResponse": ""
+        }
+      ]
+    }
+  ]
+}
+
+
+*/
+
 export function FormScreen({navigation, route}) {
   const {responseJSON} = route.params;
+  const [progress, setProgress] = useState(0.0);
 
   function booleanInputCard(form_element) {
     const [isEnabled, setIsEnabled] = useState(false);
@@ -127,8 +182,6 @@ export function FormScreen({navigation, route}) {
     );
   }
 
-  const [progress, setProgress] = useState(0.0);
-
   function renderProgressBars(N) {
     let progress_bars = [];
 
@@ -170,7 +223,7 @@ export function FormScreen({navigation, route}) {
 
   return (
     <ScrollView>
-      <View>
+      {/* <View>
         <View style={styles.progressBar}>{renderProgressBars(5)}</View>
         <View style={styles.progressBar}>{renderProgressBars(5)}</View>
       </View>
@@ -180,7 +233,8 @@ export function FormScreen({navigation, route}) {
         {textInputCard('NAME OF CANDIDATE')}
         {dateInputCard('DATE OF ELECTION')}
         {attachmentInputCard('ATTACHMENTS')}
-      </ScrollView>
+      </ScrollView> */}
+      <Text style={styles.title}>{responseJSON.formName}</Text>
     </ScrollView>
   );
 }
@@ -194,7 +248,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   progressBar: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 5,
     paddingVertical: 10,
     flex: 1,
     flexDirection: 'row',
