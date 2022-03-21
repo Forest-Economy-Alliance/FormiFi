@@ -20,27 +20,28 @@ export function FormScreen({navigation, route}) {
   // alert(JSON.stringify(formJSON, null, 2));
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
       <Text style={styles.title}>{formJSON.formName}</Text>
       <Text style={styles.description}>{formJSON.form.formDescription}</Text>
 
-      <ScrollView>
+      <View style={styles.section}>
         {formJSON.form.sections
           ? formJSON.form.sections.map((section, sectionIndex) => {
               return (
                 <View key={sectionIndex} style={styles.section}>
-                  <Text style={styles.sectionTitle}>{section.sectionName}</Text>
+                  <Text style={styles.subtitle}>{section.sectionName}</Text>
                   {section.questions.map((question, questionIndex) => {
                     return (
                       <View key={questionIndex} style={styles.question}>
-                        <Text style={styles.questionText}>
-                          {question.question}
-                        </Text>
                         {question.questionType === 'text' ? (
                           <View style={styles.queryCard}>
+                            <Text style={styles.queryCardText}>
+                              {question.question}
+                            </Text>
                             <TextInput
-                              style={styles.textInput}
+                              style={styles.queryCardInput}
                               placeholder={question.questionPlaceholder}
+                              placeholderTextColor="#747474"
                               onChangeText={text => {
                                 formJSON.form.sections[sectionIndex].questions[
                                   questionIndex
@@ -50,34 +51,48 @@ export function FormScreen({navigation, route}) {
                             />
                           </View>
                         ) : question.questionType === 'number' ? (
-                          <TextInput
-                            style={styles.textInput}
-                            placeholder={question.questionPlaceholder}
-                            onChangeText={text => {
-                              formJSON.form.sections[sectionIndex].questions[
-                                questionIndex
-                              ].userResponse = text;
-                              setFormJSON(formJSON);
-                            }}
-                          />
+                          <View style={styles.queryCard}>
+                            <Text style={styles.queryCardText}>
+                              {question.question}
+                            </Text>
+                            <TextInput
+                              style={styles.queryCardInput}
+                              placeholder={question.questionPlaceholder}
+                              placeholderTextColor="#747474"
+                              onChangeText={text => {
+                                formJSON.form.sections[sectionIndex].questions[
+                                  questionIndex
+                                ].userResponse = text;
+                                setFormJSON(formJSON);
+                              }}
+                            />
+                          </View>
                         ) : question.questionType === 'date' ? (
-                          <DatePicker
-                            style={styles.datePicker}
-                            date={
-                              formJSON.form.sections[sectionIndex].questions[
-                                questionIndex
-                              ].userResponse
-                            }
-                            mode="date"
-                            placeholder="select date"
-                            format="YYYY-MM-DD"
-                            minDate="1900-01-01"
-                            maxDate="2099-12-31"
-                            confirmBtnText="Confirm"
-                          />
+                          <View style={styles.queryCard}>
+                            <Text style={styles.queryCardText}>
+                              {question.question}
+                            </Text>
+
+                            <DatePicker
+                              style={styles.datePicker}
+                              date={
+                                formJSON.form.sections[sectionIndex].questions[
+                                  questionIndex
+                                ].userResponse
+                              }
+                              mode="date"
+                              placeholder="select date"
+                              format="YYYY-MM-DD"
+                              minDate="1900-01-01"
+                              maxDate="2099-12-31"
+                              confirmBtnText="Confirm"
+                            />
+                          </View>
                         ) : question.questionType === 'file' ? (
                           <View style={styles.queryCard}>
-                            <Text style={styles.queryCardText}>{question}</Text>
+                            <Text style={styles.queryCardText}>
+                              {question.question}
+                            </Text>
                             <Button
                               style={styles.queryCardButton}
                               color="#A68192"
@@ -124,7 +139,7 @@ export function FormScreen({navigation, route}) {
               );
             })
           : null}
-      </ScrollView>
+      </View>
       <View style={styles.buttonContainer}>
         <Button
           title="Submit"
@@ -134,7 +149,7 @@ export function FormScreen({navigation, route}) {
           }}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -148,6 +163,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    textAlign: 'center',
+    color: '#000000',
+  },
+  subtitle: {
+    fontSize: 18,
     fontWeight: 'bold',
     marginVertical: 10,
     textAlign: 'center',
