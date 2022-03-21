@@ -9,57 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-/*
-{
-  "formID": 123456789,
-  "formName": "Important ISB Form",
-  "formDescription": "This is an important form",
-  "nSections": 2,
-  "sections": [
-    {
-      "sectionName": "A super cool section",
-      "nQuestions": 3,
-      "questions": [
-        {
-          "question": "What is your name?",
-          "questionType": "text",
-          "questionRequired": true,
-          "questionPlaceholder": "Enter your name",
-          "userResponse": ""
-        },
-        {
-          "question": "What is your age?",
-          "questionType": "number",
-          "questionRequired": true,
-          "questionPlaceholder": "Enter your age",
-          "userResponse": ""
-        },
-        {
-          "question": "What is your favorite color?",
-          "questionType": "text",
-          "questionRequired": true,
-          "questionPlaceholder": "Enter your favorite color",
-          "userResponse": ""
-        }
-      ]
-    },
-    {
-      "sectionName": "Another super cool section",
-      "nQuestions": 1,
-      "questions": [
-        {
-          "question": "What is your name?",
-          "questionType": "text",
-          "questionRequired": true,
-          "questionPlaceholder": "Enter your name",
-          "userResponse": ""
-        }
-      ]
-    }
-  ]
-}
-
-*/
+import FileSystem from 'react-native-fs';
 
 export function CreateFormScreen({navigation, route}) {
   const [formJSON, setFormJSON] = useState({
@@ -88,6 +38,7 @@ export function CreateFormScreen({navigation, route}) {
 
   const [sections, setSections] = useState([]);
   function setNSections(nSections) {
+    setSections([]);
     for (var i = 0; i < nSections; i++) {
       sections.push({
         sectionName: '',
@@ -119,6 +70,7 @@ export function CreateFormScreen({navigation, route}) {
 
   const [questions, setQuestions] = useState([]);
   function setNQuestions(sectionIndex, nQuestions) {
+    setQuestions([]);
     for (var i = 0; i < nQuestions; i++) {
       questions.push({
         question: '',
@@ -264,63 +216,115 @@ export function CreateFormScreen({navigation, route}) {
     return formID;
   }
 
-  return (
-    <View>
-      <ScrollView>
-        <View style={styles.queryCard}>
-          <Text style={styles.queryCardText}>Form Name</Text>
-          <TextInput
-            style={styles.queryCardInput}
-            placeholder="Enter the Form Name"
-            placeholderTextColor="#747474"
-            onChangeText={text => setFormName(text)}
-          />
-          <Text style={styles.queryCardText}>Form Description</Text>
-          <TextInput
-            style={styles.queryCardInput}
-            placeholder="Enter the Form Description"
-            placeholderTextColor="#747474"
-            onChangeText={text => setFormDescription(text)}
-          />
-          <Text style={styles.queryCardText}>Number of Sections</Text>
-          <TextInput
-            style={styles.queryCardInput}
-            placeholder="Enter the Number of Sections"
-            placeholderTextColor="#747474"
-            keyboardType="numeric"
-            onChangeText={text => setNSections(text)}
-          />
-        </View>
-        {formJSON.sections.map((section, index) => (
-          <View key={index}>
-            <Text style={styles.title}>Section {index + 1}</Text>
-            <View style={styles.queryCard}>
-              <Text style={styles.queryCardText}>Section Name</Text>
-              <TextInput
-                style={styles.queryCardInput}
-                placeholder="Enter the Section Name"
-                placeholderTextColor="#747474"
-                onChangeText={text => setSectionName(index, text)}
-              />
-              <Text style={styles.queryCardText}>Number of Questions</Text>
-              <TextInput
-                style={styles.queryCardInput}
-                placeholder="Enter the Number of Questions"
-                placeholderTextColor="#747474"
-                keyboardType="numeric"
-                onChangeText={text => setNQuestions(index, text)}
-              />
-            </View>
-          </View>
-        ))}
+  function exportFormJSON() {
+    const jsonString = JSON.stringify(formJSON, null, 4);
+    const fileName = formJSON.formID + '.json';
 
-        <Button
-          color="#A68192"
-          title="Show Form"
-          onPress={() => {
-            alert(JSON.stringify(formJSON, null, 2));
-          }}></Button>
-      </ScrollView>
+    var path = FileSystem.ExternalDirectoryPath + '/forms/' + fileName;
+
+    FileSystem.writeFile(path, jsonString, 'utf8').then(success => {
+      alert('File written to ' + path);
+    });
+  }
+
+  return (
+    <ScrollView>
+      <View style={styles.queryCard}>
+        <Text style={styles.queryCardText}>Form Name</Text>
+        <TextInput
+          style={styles.queryCardInput}
+          placeholder="Enter the Form Name"
+          placeholderTextColor="#747474"
+          onChangeText={text => setFormName(text)}
+        />
+        <Text style={styles.queryCardText}>Form Description</Text>
+        <TextInput
+          style={styles.queryCardInput}
+          placeholder="Enter the Form Description"
+          placeholderTextColor="#747474"
+          onChangeText={text => setFormDescription(text)}
+        />
+        <Text style={styles.queryCardText}>Number of Sections</Text>
+        <TextInput
+          style={styles.queryCardInput}
+          placeholder="Enter the Number of Sections"
+          placeholderTextColor="#747474"
+          keyboardType="numeric"
+          onChangeText={text => setNSections(text)}
+        />
+      </View>
+      {formJSON.sections.map((section, index) => (
+        <View key={index}>
+          <Text style={styles.title}>Section {index + 1}</Text>
+          <View style={styles.queryCard}>
+            <Text style={styles.queryCardText}>Section Name</Text>
+            <TextInput
+              style={styles.queryCardInput}
+              placeholder="Enter the Section Name"
+              placeholderTextColor="#747474"
+              onChangeText={text => setSectionName(index, text)}
+            />
+            <Text style={styles.queryCardText}>Number of Questions</Text>
+            <TextInput
+              style={styles.queryCardInput}
+              placeholder="Enter the Number of Questions"
+              placeholderTextColor="#747474"
+              keyboardType="numeric"
+              onChangeText={text => setNQuestions(index, text)}
+            />
+          </View>
+          {section.questions.map((question, questionIndex) => (
+            <View key={questionIndex}>
+              <Text style={styles.title}>Question {questionIndex + 1}</Text>
+              <View style={styles.queryCard}>
+                <Text style={styles.queryCardText}>Question</Text>
+                <TextInput
+                  style={styles.queryCardInput}
+                  placeholder="Enter the Question"
+                  placeholderTextColor="#747474"
+                  onChangeText={text => setQuestion(index, questionIndex, text)}
+                />
+                <Text style={styles.queryCardText}>Question Type</Text>
+                <TextInput
+                  style={styles.queryCardInput}
+                  placeholder="Enter the Question Type"
+                  placeholderTextColor="#747474"
+                  onChangeText={text =>
+                    setQuestionType(index, questionIndex, text)
+                  }
+                />
+
+                <Text style={styles.queryCardText}>Question Required</Text>
+                <TextInput
+                  style={styles.queryCardInput}
+                  placeholder="Enter the Question Required"
+                  placeholderTextColor="#747474"
+                  onChangeText={text =>
+                    setQuestionRequired(index, questionIndex, text)
+                  }
+                />
+
+                <Text style={styles.queryCardText}>Question Placeholder</Text>
+                <TextInput
+                  style={styles.queryCardInput}
+                  placeholder="Enter the Question Placeholder"
+                  placeholderTextColor="#747474"
+                  onChangeText={text =>
+                    setQuestionPlaceholder(index, questionIndex, text)
+                  }
+                />
+              </View>
+            </View>
+          ))}
+        </View>
+      ))}
+
+      <Button
+        color="#A68192"
+        title="Show Form"
+        onPress={() => {
+          alert(JSON.stringify(formJSON, null, 2));
+        }}></Button>
       <View
         style={{
           padding: 5,
@@ -328,19 +332,13 @@ export function CreateFormScreen({navigation, route}) {
         }}>
         <Button
           color="#A68192"
-          title="Create Form"
-          // onPress={createFormJSON(
-          //   formName,
-          //   formDescription,
-          //   nSections,
-          //   sections,
-          // )}
+          title="Export Form"
           onPress={() => {
-            alert('JSON SAVED!');
+            exportFormJSON();
           }}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
