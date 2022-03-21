@@ -70,13 +70,6 @@ export function CreateFormScreen({navigation, route}) {
     sections: [],
   });
 
-  function setFormID(formID) {
-    setFormJSON({
-      ...formJSON,
-      formID: formID,
-    });
-  }
-
   function setFormName(formName) {
     var formID = getFormID(formName);
     setFormJSON({
@@ -124,7 +117,18 @@ export function CreateFormScreen({navigation, route}) {
     });
   }
 
+  const [questions, setQuestions] = useState([]);
   function setNQuestions(sectionIndex, nQuestions) {
+    for (var i = 0; i < nQuestions; i++) {
+      questions.push({
+        question: '',
+        questionType: '',
+        questionRequired: false,
+        questionPlaceholder: '',
+        userResponse: '',
+      });
+    }
+
     setFormJSON({
       ...formJSON,
       sections: [
@@ -132,6 +136,115 @@ export function CreateFormScreen({navigation, route}) {
         {
           ...formJSON.sections[sectionIndex],
           nQuestions: nQuestions,
+          questions: questions,
+        },
+        ...formJSON.sections.slice(sectionIndex + 1),
+      ],
+    });
+  }
+
+  function setQuestion(sectionIndex, questionIndex, question) {
+    setFormJSON({
+      ...formJSON,
+      sections: [
+        ...formJSON.sections.slice(0, sectionIndex),
+        {
+          ...formJSON.sections[sectionIndex],
+          questions: [
+            ...formJSON.sections[sectionIndex].questions.slice(
+              0,
+              questionIndex,
+            ),
+            {
+              ...formJSON.sections[sectionIndex].questions[questionIndex],
+              question: question,
+            },
+            ...formJSON.sections[sectionIndex].questions.slice(
+              questionIndex + 1,
+            ),
+          ],
+        },
+        ...formJSON.sections.slice(sectionIndex + 1),
+      ],
+    });
+  }
+
+  function setQuestionType(sectionIndex, questionIndex, questionType) {
+    setFormJSON({
+      ...formJSON,
+      sections: [
+        ...formJSON.sections.slice(0, sectionIndex),
+        {
+          ...formJSON.sections[sectionIndex],
+          questions: [
+            ...formJSON.sections[sectionIndex].questions.slice(
+              0,
+              questionIndex,
+            ),
+            {
+              ...formJSON.sections[sectionIndex].questions[questionIndex],
+              questionType: questionType,
+            },
+            ...formJSON.sections[sectionIndex].questions.slice(
+              questionIndex + 1,
+            ),
+          ],
+        },
+        ...formJSON.sections.slice(sectionIndex + 1),
+      ],
+    });
+  }
+
+  function setQuestionRequired(sectionIndex, questionIndex, questionRequired) {
+    setFormJSON({
+      ...formJSON,
+      sections: [
+        ...formJSON.sections.slice(0, sectionIndex),
+        {
+          ...formJSON.sections[sectionIndex],
+          questions: [
+            ...formJSON.sections[sectionIndex].questions.slice(
+              0,
+              questionIndex,
+            ),
+            {
+              ...formJSON.sections[sectionIndex].questions[questionIndex],
+              questionRequired: questionRequired,
+            },
+            ...formJSON.sections[sectionIndex].questions.slice(
+              questionIndex + 1,
+            ),
+          ],
+        },
+        ...formJSON.sections.slice(sectionIndex + 1),
+      ],
+    });
+  }
+
+  function setQuestionPlaceholder(
+    sectionIndex,
+    questionIndex,
+    questionPlaceholder,
+  ) {
+    setFormJSON({
+      ...formJSON,
+      sections: [
+        ...formJSON.sections.slice(0, sectionIndex),
+        {
+          ...formJSON.sections[sectionIndex],
+          questions: [
+            ...formJSON.sections[sectionIndex].questions.slice(
+              0,
+              questionIndex,
+            ),
+            {
+              ...formJSON.sections[sectionIndex].questions[questionIndex],
+              questionPlaceholder: questionPlaceholder,
+            },
+            ...formJSON.sections[sectionIndex].questions.slice(
+              questionIndex + 1,
+            ),
+          ],
         },
         ...formJSON.sections.slice(sectionIndex + 1),
       ],
@@ -178,9 +291,9 @@ export function CreateFormScreen({navigation, route}) {
             onChangeText={text => setNSections(text)}
           />
         </View>
-        {/* render nSections sections and get usr input */}
         {formJSON.sections.map((section, index) => (
           <View key={index}>
+            <Text style={styles.title}>Section {index + 1}</Text>
             <View style={styles.queryCard}>
               <Text style={styles.queryCardText}>Section Name</Text>
               <TextInput
