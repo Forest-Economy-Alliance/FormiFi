@@ -6,7 +6,6 @@
   "sections": [
     {
       "sectionName": "A super cool section",
-      "sectionDescription": "This is a super cool section",
       "nQuestions": 3,
       "questions": [
         {
@@ -34,7 +33,6 @@
     },
     {
       "sectionName": "Another super cool section",
-      "sectionDescription": "This is another super cool section",
       "nQuestions": 1,
       "questions": [
         {

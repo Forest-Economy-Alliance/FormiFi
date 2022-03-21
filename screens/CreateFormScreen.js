@@ -18,7 +18,6 @@ import {
   "sections": [
     {
       "sectionName": "A super cool section",
-      "sectionDescription": "This is a super cool section",
       "nQuestions": 3,
       "questions": [
         {
@@ -46,7 +45,6 @@ import {
     },
     {
       "sectionName": "Another super cool section",
-      "sectionDescription": "This is another super cool section",
       "nQuestions": 1,
       "questions": [
         {
@@ -61,7 +59,7 @@ import {
   ]
 }
 
- */
+*/
 
 export function CreateFormScreen({navigation, route}) {
   const [formJSON, setFormJSON] = useState({
@@ -80,9 +78,11 @@ export function CreateFormScreen({navigation, route}) {
   }
 
   function setFormName(formName) {
+    var formID = getFormID(formName);
     setFormJSON({
       ...formJSON,
       formName: formName,
+      formID: formID,
     });
   }
 
@@ -93,47 +93,121 @@ export function CreateFormScreen({navigation, route}) {
     });
   }
 
+  const [sections, setSections] = useState([]);
   function setNSections(nSections) {
+    for (var i = 0; i < nSections; i++) {
+      sections.push({
+        sectionName: '',
+        nQuestions: 0,
+        questions: [],
+      });
+    }
+
     setFormJSON({
       ...formJSON,
       nSections: nSections,
-    });
-  }
-
-  function setSections(sections) {
-    setFormJSON({
-      ...formJSON,
       sections: sections,
     });
   }
 
+  function setSectionName(sectionIndex, sectionName) {
+    setFormJSON({
+      ...formJSON,
+      sections: [
+        ...formJSON.sections.slice(0, sectionIndex),
+        {
+          ...formJSON.sections[sectionIndex],
+          sectionName: sectionName,
+        },
+        ...formJSON.sections.slice(sectionIndex + 1),
+      ],
+    });
+  }
+
+  function setNQuestions(sectionIndex, nQuestions) {
+    setFormJSON({
+      ...formJSON,
+      sections: [
+        ...formJSON.sections.slice(0, sectionIndex),
+        {
+          ...formJSON.sections[sectionIndex],
+          nQuestions: nQuestions,
+        },
+        ...formJSON.sections.slice(sectionIndex + 1),
+      ],
+    });
+  }
+
+  function getFormID(formName) {
+    var formID = formName.replace(/\s/g, '_');
+    formID = formID.replace(/\W/g, '');
+    formID = formID.toLowerCase();
+
+    formID = formID + '_' + Math.floor(Math.random() * 9);
+    formID = formID + '_' + Math.floor(Math.random() * 9);
+    formID = formID + '_' + Math.floor(Math.random() * 9);
+    formID = formID + '_' + Math.floor(Math.random() * 9);
+
+    return formID;
+  }
+
   return (
-    <ScrollView>
-      <View style={styles.queryCard}>
-        <Text style={styles.queryCardText}>Form Name</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Form Name"
-          placeholderTextColor="#747474"
-          onChangeText={text => setFormName(text)}
-        />
-        <Text style={styles.queryCardText}>Form Description</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Form Description"
-          placeholderTextColor="#747474"
-          onChangeText={text => setFormDescription(text)}
-        />
-        <Text style={styles.queryCardText}>Number of Sections</Text>
-        <TextInput
-          style={styles.queryCardInput}
-          placeholder="Enter the Number of Sections"
-          placeholderTextColor="#747474"
-          keyboardType="numeric"
-          onChangeText={text => setNSections(text)}
-        />
-      </View>
-      {/* <View>{SectionCard(nSections)}</View> */}
+    <View>
+      <ScrollView>
+        <View style={styles.queryCard}>
+          <Text style={styles.queryCardText}>Form Name</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Form Name"
+            placeholderTextColor="#747474"
+            onChangeText={text => setFormName(text)}
+          />
+          <Text style={styles.queryCardText}>Form Description</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Form Description"
+            placeholderTextColor="#747474"
+            onChangeText={text => setFormDescription(text)}
+          />
+          <Text style={styles.queryCardText}>Number of Sections</Text>
+          <TextInput
+            style={styles.queryCardInput}
+            placeholder="Enter the Number of Sections"
+            placeholderTextColor="#747474"
+            keyboardType="numeric"
+            onChangeText={text => setNSections(text)}
+          />
+        </View>
+        {/* render nSections sections and get usr input */}
+        {formJSON.sections.map((section, index) => (
+          <View key={index}>
+            <View style={styles.queryCard}>
+              <Text style={styles.queryCardText}>Section Name</Text>
+              <TextInput
+                style={styles.queryCardInput}
+                placeholder="Enter the Section Name"
+                placeholderTextColor="#747474"
+                onChangeText={text => setSectionName(index, text)}
+              />
+              <Text style={styles.queryCardText}>Number of Questions</Text>
+              <TextInput
+                style={styles.queryCardInput}
+                placeholder="Enter the Number of Questions"
+                placeholderTextColor="#747474"
+                keyboardType="numeric"
+                onChangeText={text => setNQuestions(index, text)}
+              />
+            </View>
+          </View>
+        ))}
+
+        <Button
+          color="#A68192"
+          title="Show Form"
+          onPress={() => {
+            alert(JSON.stringify(formJSON, null, 2));
+          }}></Button>
+      </ScrollView>
       <View
         style={{
           padding: 5,
@@ -153,7 +227,7 @@ export function CreateFormScreen({navigation, route}) {
           }}
         />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
