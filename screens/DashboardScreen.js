@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {Button, View, Text, FlatList} from 'react-native';
+import {Button, View, Text, FlatList, ScrollView} from 'react-native';
 
 import FileSystem from 'react-native-fs';
 
@@ -60,7 +60,7 @@ export function DashboardScreen({navigation, route}) {
 
   function showSubmissions() {
     return (
-      <View>
+      <ScrollView>
         <View>
           <FlatList
             data={formsPaths}
@@ -107,7 +107,7 @@ export function DashboardScreen({navigation, route}) {
             keyExtractor={item => item}
           />
         </View>
-      </View>
+      </ScrollView>
     );
   }
 
