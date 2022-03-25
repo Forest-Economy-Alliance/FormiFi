@@ -6,9 +6,9 @@ import {useForm, Controller} from 'react-hook-form';
 export function UserLoginScreen({navigation}) {
   const {handleSubmit, control, reset} = useForm({
     defaultValues: {
-      Name: 'Test' + Math.floor(Math.random() * 100),
-      Age: Math.floor(Math.random() * 100).toString(),
-      Sex: 'Male',
+      Name: '',
+      Age: '',
+      Sex: '',
     },
   });
 

@@ -16,6 +16,7 @@ export function FormSelectorScreen({navigation, route}) {
     submissionID: '',
     formName: '',
     form: {},
+    time: '',
   };
 
   const [form, setForm] = useState(null);
@@ -97,10 +98,6 @@ export function FormSelectorScreen({navigation, route}) {
   function handleSubmit(form) {
     responseJSON.formName = form;
     responseJSON.submissionID = Generate_SubmissionID(data, form);
-    console.log(
-      'Going to the Form with',
-      JSON.stringify(responseJSON, null, 4),
-    );
     navigation.navigate('Form', {responseJSON});
 
     FileSystem.readFile(
@@ -111,16 +108,11 @@ export function FormSelectorScreen({navigation, route}) {
         responseJSON.form = JSON.parse(content, null, 2);
         responseJSON.formName = form;
         responseJSON.submissionID = Generate_SubmissionID(data, form);
-        // console.log('Going to the Form with', JSON.stringify(responseJSON, null, 4));
         navigation.navigate('Form', {responseJSON});
       })
       .catch(err => {
         responseJSON.formName = form;
         responseJSON.submissionID = Generate_SubmissionID(data, form);
-        console.log(
-          'Going to the Form with',
-          JSON.stringify(responseJSON, null, 4),
-        );
         navigation.navigate('Form', {responseJSON});
       });
   }

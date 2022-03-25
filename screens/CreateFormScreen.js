@@ -217,10 +217,10 @@ export function CreateFormScreen({navigation, route}) {
   }
 
   function exportFormJSON() {
-    const jsonString = JSON.stringify(formJSON, null, 4);
+    const jsonString = JSON.stringify(formJSON, null, 2);
     const fileName = formJSON.formID + '.json';
 
-    var path = FileSystem.ExternalDirectoryPath + '/forms/' + fileName;
+    var path = FileSystem.DownloadDirectoryPath + '/FormiFi/' + fileName;
 
     FileSystem.writeFile(path, jsonString, 'utf8').then(success => {
       alert('File written to ' + path);
@@ -319,24 +319,29 @@ export function CreateFormScreen({navigation, route}) {
         </View>
       ))}
 
-      <Button
-        color="#A68192"
-        title="Show Form"
-        onPress={() => {
-          alert(JSON.stringify(formJSON, null, 2));
-        }}></Button>
       <View
         style={{
-          padding: 5,
-          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
         }}>
-        <Button
-          color="#A68192"
-          title="Export Form"
-          onPress={() => {
-            exportFormJSON();
-          }}
-        />
+        <View style={{padding: 5, width: '35%'}}>
+          <Button
+            color="#8192A6"
+            title="Show Form"
+            onPress={() => {
+              alert(JSON.stringify(formJSON, null, 2));
+            }}
+          />
+        </View>
+        <View style={{padding: 5, width: '35%'}}>
+          <Button
+            color="#A68192"
+            title="Export Form"
+            onPress={() => {
+              exportFormJSON();
+            }}
+          />
+        </View>
       </View>
     </ScrollView>
   );

@@ -6,6 +6,9 @@ import FileSystem from 'react-native-fs';
 
 export function HomeScreen({navigation}) {
   FileSystem.mkdir(FileSystem.ExternalDirectoryPath + '/forms');
+  FileSystem.mkdir(FileSystem.ExternalDirectoryPath + '/submissions');
+  FileSystem.mkdir(FileSystem.DownloadDirectoryPath + '/FormiFi/');
+
   return (
     <View
       style={{

@@ -7,9 +7,18 @@ import FileSystem from 'react-native-fs';
 import Dialog from 'react-native-dialog';
 
 export function DashboardScreen({navigation, route}) {
-  var submissionsPaths = ['Forms'];
+  var formsPaths = ['Forms'];
+  var submissionsPaths = ['Submissions'];
 
   FileSystem.readDir(FileSystem.ExternalDirectoryPath + '/forms/').then(
+    files => {
+      for (let i = 0; i < files.length; i++) {
+        formsPaths.push(files[i].name);
+      }
+    },
+  );
+
+  FileSystem.readDir(FileSystem.ExternalDirectoryPath + '/submissions/').then(
     files => {
       for (let i = 0; i < files.length; i++) {
         submissionsPaths.push(files[i].name);
@@ -17,9 +26,22 @@ export function DashboardScreen({navigation, route}) {
     },
   );
 
-  function openFile(fileName) {
+  function openFormsFile(fileName) {
     FileSystem.readFile(
       FileSystem.ExternalDirectoryPath + '/forms/' + fileName,
+      'utf8',
+    ).then(success => {
+      alert(success);
+    });
+  }
+
+  function openSubmissionsFolder(folderName) {
+    FileSystem.readFile(
+      FileSystem.ExternalDirectoryPath +
+        '/submissions/' +
+        folderName +
+        '/' +
+        'submission.json',
       'utf8',
     ).then(success => {
       alert(success);
@@ -39,27 +61,52 @@ export function DashboardScreen({navigation, route}) {
   function showSubmissions() {
     return (
       <View>
-        <FlatList
-          data={submissionsPaths}
-          renderItem={({item}) => (
-            <View
-              style={{
-                marginVertical: 10,
-                backgroundColor: '#A68192',
-                borderRadius: 10,
-                width: '100%',
-              }}>
-              <Button
-                title={item}
-                color="#A68192"
-                onPress={() => {
-                  openFile(item);
-                }}
-              />
-            </View>
-          )}
-          keyExtractor={item => item}
-        />
+        <View>
+          <FlatList
+            data={formsPaths}
+            renderItem={({item}) => (
+              <View
+                style={{
+                  marginVertical: 10,
+                  backgroundColor: '#A68192',
+                  borderRadius: 10,
+                  width: '100%',
+                }}>
+                <Button
+                  title={item}
+                  color="#A68192"
+                  onPress={() => {
+                    openFormsFile(item);
+                  }}
+                />
+              </View>
+            )}
+            keyExtractor={item => item}
+          />
+        </View>
+        <View>
+          <FlatList
+            data={submissionsPaths}
+            renderItem={({item}) => (
+              <View
+                style={{
+                  marginVertical: 10,
+                  backgroundColor: '#8192A6',
+                  borderRadius: 10,
+                  width: '100%',
+                }}>
+                <Button
+                  title={item}
+                  color="#8192A6"
+                  onPress={() => {
+                    openSubmissionsFolder(item);
+                  }}
+                />
+              </View>
+            )}
+            keyExtractor={item => item}
+          />
+        </View>
       </View>
     );
   }

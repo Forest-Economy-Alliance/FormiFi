@@ -17,7 +17,44 @@ import * as Progress from 'react-native-progress';
 
 export function FormScreen({navigation, route}) {
   const [formJSON, setFormJSON] = useState(route.params.responseJSON);
-  // alert(JSON.stringify(formJSON, null, 2));
+  FileSystem.mkdir(
+    FileSystem.ExternalDirectoryPath + '/submissions/' + formJSON.submissionID,
+  );
+
+  function exportSubmission() {
+    var timeNow = new Date();
+    var dateString =
+      timeNow.getFullYear() +
+      '-' +
+      (timeNow.getMonth() + 1) +
+      '-' +
+      timeNow.getDate();
+    var timeString =
+      timeNow.getHours() +
+      '-' +
+      timeNow.getMinutes() +
+      '-' +
+      timeNow.getSeconds();
+
+    var timeDate = dateString + '_' + timeString;
+
+    formJSON.time = timeDate;
+    setFormJSON(formJSON);
+
+    const jsonString = JSON.stringify(formJSON, null, 2);
+    const fileName = 'submission.json';
+
+    var path =
+      FileSystem.ExternalDirectoryPath +
+      '/submissions/' +
+      formJSON.submissionID +
+      '/' +
+      fileName;
+
+    FileSystem.writeFile(path, jsonString, 'utf8').then(success => {
+      alert('File written to ' + path);
+    });
+  }
 
   return (
     <ScrollView>
@@ -59,6 +96,7 @@ export function FormScreen({navigation, route}) {
                               style={styles.queryCardInput}
                               placeholder={question.questionPlaceholder}
                               placeholderTextColor="#747474"
+                              keyboardType="numeric"
                               onChangeText={text => {
                                 formJSON.form.sections[sectionIndex].questions[
                                   questionIndex
@@ -73,19 +111,18 @@ export function FormScreen({navigation, route}) {
                               {question.question}
                             </Text>
 
-                            <DatePicker
-                              style={styles.datePicker}
-                              date={
+                            <TextInput
+                              style={styles.queryCardInput}
+                              placeholder={
+                                question.questionPlaceholder + ' (YYYY-MM-DD)'
+                              }
+                              placeholderTextColor="#747474"
+                              onChangeText={text => {
                                 formJSON.form.sections[sectionIndex].questions[
                                   questionIndex
-                                ].userResponse
-                              }
-                              mode="date"
-                              placeholder="select date"
-                              format="YYYY-MM-DD"
-                              minDate="1900-01-01"
-                              maxDate="2099-12-31"
-                              confirmBtnText="Confirm"
+                                ].userResponse = text;
+                                setFormJSON(formJSON);
+                              }}
                             />
                           </View>
                         ) : question.questionType === 'file' ? (
@@ -102,35 +139,44 @@ export function FormScreen({navigation, route}) {
                                   type: [DocumentPicker.types.allFiles],
                                   copyTo: 'documentDirectory',
                                 }).then(file => {
-                                  setAttachment(file);
-                                  let file_name = form[0].name;
-                                  let file_path = form[0].uri;
-
-                                  let dest_path =
-                                    FileSystem.ExternalDirectoryPath +
-                                    '/files' +
-                                    '/' +
-                                    file_name;
+                                  alert(JSON.stringify(file, null, 2));
+                                  formJSON.form.sections[
+                                    sectionIndex
+                                  ].questions[questionIndex].userResponse =
+                                    file[0].name;
+                                  setFormJSON(formJSON);
 
                                   FileSystem.copyFile(
-                                    file_path,
-                                    dest_path,
-                                  ).then(() => {});
+                                    file[0].uri,
+                                    FileSystem.ExternalDirectoryPath +
+                                      '/submissions/' +
+                                      formJSON.submissionID +
+                                      '/' +
+                                      file[0].name,
+                                  );
                                 });
                               }}
                             />
                           </View>
-                        ) : question.questionType === 'switch' ? (
-                          <Switch
-                            style={styles.switch}
-                            value={question.userResponse}
-                            onValueChange={value => {
-                              formJSON.form.sections[sectionIndex].questions[
-                                questionIndex
-                              ].userResponse = value;
-                              setFormJSON(formJSON);
-                            }}
-                          />
+                        ) : question.questionType === 'boolean' ? (
+                          <View style={styles.queryCard}>
+                            <Text style={styles.queryCardText}>
+                              {question.question}
+                            </Text>
+                            <TextInput
+                              style={styles.queryCardInput}
+                              placeholder={
+                                question.questionPlaceholder + ' (yes/no)'
+                              }
+                              placeholderTextColor="#747474"
+                              onChangeText={text => {
+                                formJSON.form.sections[sectionIndex].questions[
+                                  questionIndex
+                                ].userResponse = text;
+                                setFormJSON(formJSON);
+                              }}
+                            />
+                          </View>
                         ) : null}
                       </View>
                     );
@@ -142,10 +188,10 @@ export function FormScreen({navigation, route}) {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Submit"
+          title="Save Response"
           color="#A68192"
           onPress={() => {
-            alert(JSON.stringify(formJSON, null, 2));
+            exportSubmission();
           }}
         />
       </View>
@@ -221,5 +267,8 @@ const styles = StyleSheet.create({
     margin: 10,
     width: '100%',
     textAlign: 'center',
+  },
+  queryCardSwitch: {
+    margin: 10,
   },
 });
